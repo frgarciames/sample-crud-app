@@ -30,6 +30,12 @@ class ClientItem extends Component {
     })
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({
+      client: props.client
+    })
+  }
+
   render() {
     return (
       <div>
@@ -57,10 +63,6 @@ class ClientItem extends Component {
               )
             })}
           </ContainerText>
-          <ContainerButtons>
-            <CustomButton background={imageEdit}></CustomButton>
-            <CustomButton background={imageDelete} onClick={() => this.props.deleteClient(this.state.client.id)}></CustomButton>
-          </ContainerButtons>
         </ContainerItem>
       </div>
     );

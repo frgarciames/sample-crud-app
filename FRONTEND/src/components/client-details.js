@@ -10,64 +10,25 @@ import {
   ContainerButtons,
   ContainerText,
   DetailsButton,
-  CustomButton,
   Value,
   Title,
-  Image
+  Image,
+  ContainerTextDetails
 } from './client-item-styles'
 
-const ContainerDetails = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-color: #ccc;
-`;
+import {
+  ContainerDetails,
+  ContainerInput,
+  ContainerItemDetails,
+  CloseModal,
+  HtmlLabel,
+  CustomButton,
+  HtmlInput,
+  ContainerInputChild,
+  CancelEditButton
+} from './client-details-styles'
+import ClientApi from '../services/client-api'
 
-const ContainerItemDetails = styled.div`
-  width: 40em;
-  padding: 1em;
-  display: flex;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-`;
-
-const CloseModal = styled.span`
-  position: absolute;
-  right: -1em;
-  top: -1em;
-  width: 1.7em;
-  height: 1.5em;
-  border-radius: 50%;
-  border: 2px solid grey;
-  font-size: 1.5em;
-  text-align: center;
-  cursor: pointer;
-  color: white;
-  background-color: grey;
-  padding-top: .3em;
-`;
-
-const HtmlLabel = styled.label`
-  font-weight: bold;
-`
-
-const HtmlInput = styled.input`
-  position: absolute;
-  left: 20em;
-`;
-
-const ContainerInput = styled.div`
-  display: block;
-  margin-top: 1em;
-`;
-
-const ContainerInputChild = styled.div`
-  display: block;
-  margin-left: 2em;
-`;
 
 class ClientDetails extends Component {
   constructor(props) {
@@ -75,8 +36,13 @@ class ClientDetails extends Component {
 
     this.state = {
       client: {},
-      clientUpdated: {}
+      clientNotUpdated: {},
+      editMode: false
     }
+    this.cancelEdit = this.cancelEdit.bind(this)
+    this.cancelEditMode = this.cancelEditMode.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.renderClient = this.renderClient.bind(this)
   }
 
   componentWillMount() {
@@ -85,10 +51,62 @@ class ClientDetails extends Component {
     })
   }
 
+  renderClient() {
+    ClientApi.getById(this.state.client.id)
+      .then(data => this.setState({
+        client: data
+      }))
+  }
+
+  cancelEditMode() {
+    this.renderClient();
+    this.setState({
+      editMode: !this.state.editMode
+    })
+  }
+
+  cancelEdit() {
+    this.setState({
+      editMode: !this.state.editMode
+    })
+  }
+
+  handleChange(key, event) {
+    let clientUpdated = this.state.client;
+    clientUpdated[key] = event.target.value;
+    this.setState({
+      client: clientUpdated
+    })
+  }
+
+  handleChangeCompany(key, event) {
+    let clientUpdated = this.state.client;
+    clientUpdated.company[key] = event.target.value;
+    this.setState({
+      client: clientUpdated
+    })
+  }
+
+  handleChangeAddress(key, event) {
+    let clientUpdated = this.state.client;
+    clientUpdated.address[key] = event.target.value;
+    this.setState({
+      client: clientUpdated
+    })
+  }
+
+  handleChangeGeo(key, event) {
+    let clientUpdated = this.state.client;
+    clientUpdated.address.geo[key] = event.target.value;
+    this.setState({
+      client: clientUpdated
+    })
+  }
+
   render() {
     return (
       <div>
-        <ContainerDetails>
+        <ContainerDetails onClick={() => this.props.cancelDetails()}>
         </ContainerDetails>
         <ContainerItemDetails>
           <CloseModal onClick={() => this.props.cancelDetails()}>
@@ -98,81 +116,108 @@ class ClientDetails extends Component {
             <Image src={imageProfile} alt="user" />
           </ContainerImage>
           <ContainerText>
+            {Object.keys(this.state.client).map(key => {
+              return (
+                key !== 'address' &&
+                  key !== 'company' &&
+                  key !== 'id' ?
+                  <ContainerInput key={key}>
+                    <HtmlLabel>{key.charAt(0).toUpperCase() + key.slice(1)}:</HtmlLabel>
+                    <HtmlInput
+                      value={this.state.client[key]}
+                      onChange={(event) => this.handleChange(key, event)}
+                      disabled={!this.state.editMode} />
+                  </ContainerInput>
+                  : ''
+              )
+            })}
             <ContainerInput>
-              <HtmlLabel>Name:</HtmlLabel>
-              <HtmlInput value={this.state.client.name} />
+              <HtmlLabel>Company:</HtmlLabel>
+              <ContainerInputChild>
+                {Object.keys(this.state.client.company).map(key => {
+                  return (
+                    <ContainerInput key={key}>
+                      <HtmlLabel>{key.charAt(0).toUpperCase() + key.slice(1)}:</HtmlLabel>
+                      <HtmlInput
+                        value={this.state.client.company[key]}
+                        onChange={(event) => this.handleChangeCompany(key, event)}
+                        disabled={!this.state.editMode} />
+                    </ContainerInput>
+                  )
+                })}
+              </ContainerInputChild>
             </ContainerInput>
-            <ContainerInput>
-              <HtmlLabel>Username:</HtmlLabel>
-              <HtmlInput value={this.state.client.username} />
-            </ContainerInput>
-            <ContainerInput>
-              <HtmlLabel>Email:</HtmlLabel>
-              <HtmlInput value={this.state.client.email} />
-            </ContainerInput>
-            <ContainerInput>
-              <HtmlLabel>Phone:</HtmlLabel>
-              <HtmlInput value={this.state.client.phone} />
-            </ContainerInput>
-            <ContainerInput>
-              <HtmlLabel>Website:</HtmlLabel>
-              <HtmlInput value={this.state.client.website} />
-            </ContainerInput>
+          </ContainerText>
+          <ContainerTextDetails>
             <ContainerInput>
               <HtmlLabel>Address:</HtmlLabel>
               <ContainerInputChild>
+                {Object.keys(this.state.client.address).map(key => {
+                  return (
+                    key !== 'geo' ?
+                      <ContainerInput key={key}>
+                        <HtmlLabel>{key.charAt(0).toUpperCase() + key.slice(1)}:</HtmlLabel>
+                        <HtmlInput
+                          value={this.state.client.address[key]}
+                          onChange={(event) => this.handleChangeAddress(key, event)}
+                          disabled={!this.state.editMode} />
+                      </ContainerInput>
+                      : ''
+                  )
+                })}
                 <ContainerInput>
-                  <HtmlLabel>Street:</HtmlLabel>
-                  <HtmlInput value={this.state.client.address.street} />
-                </ContainerInput>
-                <ContainerInput>
-                  <HtmlLabel>Suite:</HtmlLabel>
-                  <HtmlInput value={this.state.client.address.suite} />
-                </ContainerInput>
-                <ContainerInput>
-                  <HtmlLabel>City:</HtmlLabel>
-                  <HtmlInput value={this.state.client.address.city} />
-                </ContainerInput>
-                <ContainerInput>
-                  <HtmlLabel>Zipcode:</HtmlLabel>
-                  <HtmlInput value={this.state.client.address.zipcode} />
-                </ContainerInput>
-                <ContainerInput>
-                  <HtmlLabel>Geo:</HtmlLabel>
+                  <HtmlLabel>Geo</HtmlLabel>
                   <ContainerInputChild>
-                    <ContainerInput>
-                      <HtmlLabel>Latitude:</HtmlLabel>
-                      <HtmlInput value={this.state.client.address.geo.lat} />
-                    </ContainerInput>
-                    <ContainerInput>
-                      <HtmlLabel>Longitude:</HtmlLabel>
-                      <HtmlInput value={this.state.client.address.geo.lng} />
-                    </ContainerInput>
+                    {Object.keys(this.state.client.address).map(key => {
+                      return (
+                        key == 'geo' ?
+                          Object.keys(this.state.client.address[key]).map(keyOfKey => {
+                            return (
+                              <ContainerInput key={keyOfKey}>
+                                <HtmlLabel>{keyOfKey.charAt(0).toUpperCase() + keyOfKey.slice(1)}:</HtmlLabel>
+                                <HtmlInput
+                                  value={this.state.client.address[key][keyOfKey]}
+                                  onChange={(event) => this.handleChangeGeo(keyOfKey, event)}
+                                  disabled={!this.state.editMode} />
+                              </ContainerInput>
+                            )
+                          }) : ''
+                      )
+                    })}
                   </ContainerInputChild>
                 </ContainerInput>
               </ContainerInputChild>
             </ContainerInput>
-            <ContainerInput>
-              <HtmlLabel>Company:</HtmlLabel>
-              <ContainerInputChild>
-                <ContainerInput>
-                  <HtmlLabel>Name:</HtmlLabel>
-                  <HtmlInput value={this.state.client.company.name} />
-                </ContainerInput>
-                <ContainerInput>
-                  <HtmlLabel>Catch-Phrase:</HtmlLabel>
-                  <HtmlInput value={this.state.client.company.catchPhrase} />
-                </ContainerInput>
-                <ContainerInput>
-                  <HtmlLabel>Bs:</HtmlLabel>
-                  <HtmlInput value={this.state.client.company.bs} />
-                </ContainerInput>
-              </ContainerInputChild>
-            </ContainerInput>
-          </ContainerText>
+          </ContainerTextDetails>
           <ContainerButtons>
-            <CustomButton background={imageEdit}></CustomButton>
-            <CustomButton background={imageDelete} onClick={() => this.props.deleteClient(this.state.client.id)}></CustomButton>
+            <CustomButton
+              background={imageEdit}
+              onClick={this.cancelEdit}
+              show={!this.state.editMode}>
+            </CustomButton>
+            <CancelEditButton
+              show={this.state.editMode}
+              onClick={this.cancelEditMode}
+              mode='bad'>
+              Cancel
+            </CancelEditButton>
+            <CancelEditButton
+              show={this.state.editMode}
+              onClick={() => {
+                this.props.updateClient(this.state.client.id, this.state.client), 
+                this.props.cancelDetails()
+              }}
+              mode='nice'>
+              Save
+            </CancelEditButton>
+            <CustomButton
+              show={!this.state.editMode}
+              background={imageDelete}
+              onClick={() => {
+                this.props.deleteClient(this.state.client.id), 
+                this.props.cancelDetails()
+              }}>
+            </CustomButton>
           </ContainerButtons>
         </ContainerItemDetails>
       </div>

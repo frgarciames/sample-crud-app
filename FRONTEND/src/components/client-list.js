@@ -6,6 +6,7 @@ import { addClient, removeClient, editClient } from '../actionCreators'
 import styled from 'styled-components'
 import ClientDetails from './client-details'
 import ClientApi from '../services/client-api'
+import ClientNew from './client-new'
 
 const ContainerList = styled.div`
   display: flex;
@@ -15,6 +16,28 @@ const ContainerList = styled.div`
   margin: 0 auto;
 `;
 
+const TitleList = styled.p`
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+`;
+
+const AddClientButton = styled.button`
+  background-color: #13890f;
+  width: 2em;
+  height: 2em;
+  border: 0;
+  box-shadow: 2px 2px 4px #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  top: 2em;
+  right: 2em;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #fff;
+`;
+
 class ClientList extends Component {
   constructor(props) {
     super(props);
@@ -22,10 +45,12 @@ class ClientList extends Component {
     this.state = {
       clients: [],
       showingDetails: false,
-      clientDetails: {}
+      clientDetails: {},
+      showingNewClient: false
     }
 
     this.cancelDetails = this.cancelDetails.bind(this)
+    this.cancelNewClient = this.cancelNewClient.bind(this)
   }
 
   componentWillReceiveProps(props) {
@@ -42,10 +67,17 @@ class ClientList extends Component {
       }))
   }
 
-  cancelDetails(){
+  cancelDetails() {
     this.setState({
       showingDetails: false,
-      clientDetails: {}
+      clientDetails: {},
+      showingNewClient: false
+    })
+  }
+
+  cancelNewClient() {
+    this.setState({
+      showingNewClient: false
     })
   }
 
@@ -57,21 +89,33 @@ class ClientList extends Component {
             <ClientDetails
               client={this.state.clientDetails}
               showing={this.state.showingDetails}
-              cancelDetails={this.cancelDetails} /> </div> :
-          <div>
-            <button onClick={() => this.props.save({ id: '2323' })}> new client</button>
-            <p>ClientListComponent</p>
-            <ContainerList>
-              {[...this.state.clients].map(client =>
-                <ClientItem
-                  client={client}
-                  key={client.id}
-                  deleteClient={this.props.remove}
-                  editClient={this.editClient}
-                  getById={() => this.getById(client.id)} />
-              )}
-            </ContainerList>
-          </div>
+              cancelDetails={this.cancelDetails}
+              deleteClient={this.props.remove}
+              updateClient={this.props.update} />
+          </div> : this.state.showingNewClient ?
+            <div>
+              <ClientNew 
+                cancelNewClient={this.cancelNewClient}
+                save={this.props.save} />
+            </div> :
+            <div>
+              <TitleList>Client list</TitleList>
+              <ContainerList>
+                <AddClientButton
+                  onClick={() => 
+                  this.setState({ 
+                    showingNewClient: true 
+                  })}>
+                  +
+              </AddClientButton>
+                {[...this.state.clients].map(client =>
+                  <ClientItem
+                    client={client}
+                    key={client.id}
+                    getById={() => this.getById(client.id)} />
+                )}
+              </ContainerList>
+            </div>
         }
       </div>
     );
@@ -87,16 +131,18 @@ const mapStateToProps = state => {
   return {
     clients: state.clients
   }
-
 }
 
 const mapDispatchToProps = dispatch => {
   return {
+    save(client) {
+      dispatch(addClient(client))
+    },
     remove(id) {
       dispatch(removeClient(id))
     },
-    save(client) {
-      dispatch(addClient(client))
+    update(id, client) {
+      dispatch(editClient(id, client));
     }
   }
 }

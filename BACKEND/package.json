@@ -1,0 +1,29 @@
+{
+  "name": "crud-app-backend",
+  "version": "1.0.0",
+  "description": "sample-crud-app",
+  "main": "app.js",
+  "dependencies": {
+    "bl": "^1.2.2",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "js": "^0.1.0",
+    "jade": "^1.11.0",
+    "rocks": "^0.0.0-semantically-released",
+    "through2-map": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frgarciames/sample-crud-app.git"
+  },
+  "author": "frgarciames",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frgarciames/sample-crud-app/issues"
+  },
+  "homepage": "https://github.com/frgarciames/sample-crud-app#readme"
+}

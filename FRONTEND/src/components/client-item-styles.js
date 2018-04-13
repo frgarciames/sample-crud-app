@@ -28,6 +28,12 @@ const ContainerText = styled.div`
   font-size: .9em;
 `;
 
+const ContainerTextDetails = styled.div`
+  margin-left: 14em;
+  font-size: .9em;
+  margin-top: .7em;
+`;
+
 const Title = styled.div`
   font-weight: bold;
   display: inline-block;
@@ -41,20 +47,8 @@ const Value = styled.div`
 const ContainerButtons = styled.div`
   position: absolute;
   display: flex;
-  right: .3em;
-  top: .3em;
-`;
-
-const CustomButton = styled.div`
-  background: url(${props => props.background});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  border: 0;
-  width: 1.3em;
-  height: 1.3em;
-  margin-right: .5em;
-  cursor: pointer;
+  right: 1em;
+  bottom: 1em;
 `;
 
 const DetailsButton = styled.div`
@@ -67,4 +61,14 @@ const DetailsButton = styled.div`
   font-size: .8em;
 `;
 
-export {ContainerItem, ContainerImage, ContainerButtons, ContainerText, DetailsButton, CustomButton, Value, Title, Image};
+export {
+  ContainerItem, 
+  ContainerImage, 
+  ContainerButtons, 
+  ContainerText, 
+  DetailsButton, 
+  Value, 
+  Title, 
+  Image, 
+  ContainerTextDetails
+};

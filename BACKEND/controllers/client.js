@@ -40,7 +40,7 @@ function save(req, res) {
 			req.body.company);
 		clients.push(client);
 		res.status(202);
-		res.json(clients);
+		findAllNoDetails(req, res)
 	} else {
 		res.status(404);
 		res.json({ response: 'Body not valid' });
@@ -51,7 +51,7 @@ function remove(req, res) {
 	let clientToRemove = findClient(req.params.id);
 	if (null != clientToRemove) {
 		clients.splice(clients.indexOf(clientToRemove), 1);
-		res.json({ response: clients })
+		findAllNoDetails(req, res)
 	} else {
 		res.status(404);
 		res.json({ response: 'Client not found' })
@@ -66,7 +66,7 @@ function update(req, res) {
 		Object.assign(clientToUpdate, req.body)
 		clients[index] = clientToUpdate
 		res.status(202)
-		res.json(findClient(clientToUpdate.id))
+		findAllNoDetails(req, res)
 	} else {
 		res.status(404)
 		res.json({ response: 'Id not valid' })
