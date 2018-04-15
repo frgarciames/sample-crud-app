@@ -38,7 +38,7 @@ class ClientItem extends Component {
 
   render() {
     return (
-      <div>
+      <div className='client'>
         <ContainerItem>
           <DetailsButton
             onClick={() => this.props.getById()}>
