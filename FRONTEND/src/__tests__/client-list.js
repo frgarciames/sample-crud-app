@@ -1,9 +1,17 @@
 import React from 'react'
-import  { render } from 'enzyme'
-import ClientList from '../components/client-list';
+import  { shallow } from 'enzyme'
+import ConnectedClientList from '../components/client-list';
+import configureStore from '../store/configureStore'
+import ClientItem from '../components/client-item';
+
+const store = configureStore();
+
+store.dispatch({
+  type: "LOAD_CLIENTS",
+  clients: [{id: 1, name: 'test'}]
+});
 
 it('renders client list empty', () => {
-    const wrapper = render(<ClientList clients={[]} />);
-    console.log(wrapper.text())
-    expect(wrapper.find('.client').length).toBe(0)
+    const wrapper = shallow(<ConnectedClientList store={store}/>);
+    expect(wrapper.find(ClientItem).length).toBe(0)
 })

@@ -54,6 +54,7 @@ class ClientList extends Component {
   }
 
   componentWillReceiveProps(props) {
+    console.log(props)
     this.setState({
       clients: props.clients
     })
@@ -99,7 +100,7 @@ class ClientList extends Component {
                 save={this.props.save} />
             </div> :
             <div>
-              <TitleList>Client list</TitleList>
+              <TitleList className='.client-list'>Client list</TitleList>
               <ContainerList>
                 <AddClientButton
                   onClick={() => 
