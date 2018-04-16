@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import ClientList from './client-list'
-import styled from 'styled-components'
 import imageProfile from '../assets/profile.png'
 import imageDelete from '../assets/delete-icon.png';
 import imageEdit from '../assets/edit-icon.png'
 import {
-  ContainerItem,
   ContainerImage,
   ContainerButtons,
   ContainerText,
-  DetailsButton,
-  Value,
-  Title,
   Image,
   ContainerTextDetails
 } from './client-item-styles'
@@ -170,7 +164,7 @@ class ClientDetails extends Component {
                   <ContainerInputChild>
                     {Object.keys(this.state.client.address).map(key => {
                       return (
-                        key == 'geo' ?
+                        key === 'geo' ?
                           Object.keys(this.state.client.address[key]).map(keyOfKey => {
                             return (
                               <ContainerInput key={keyOfKey}>
@@ -204,7 +198,7 @@ class ClientDetails extends Component {
             <CancelEditButton
               show={this.state.editMode}
               onClick={() => {
-                this.props.updateClient(this.state.client.id, this.state.client), 
+                this.props.updateClient(this.state.client.id, this.state.client)
                 this.props.cancelDetails()
               }}
               mode='nice'>
@@ -214,7 +208,7 @@ class ClientDetails extends Component {
               show={!this.state.editMode}
               background={imageDelete}
               onClick={() => {
-                this.props.deleteClient(this.state.client.id), 
+                this.props.deleteClient(this.state.client.id)
                 this.props.cancelDetails()
               }}>
             </CustomButton>

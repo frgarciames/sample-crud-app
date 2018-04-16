@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import ClientItem from './client-item'
 import { connect } from 'react-redux'
 import { addClient, removeClient, editClient } from '../actionCreators'

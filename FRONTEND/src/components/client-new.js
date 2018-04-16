@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import imageProfile from '../assets/profile.png'
-import imageDelete from '../assets/delete-icon.png';
-import imageEdit from '../assets/edit-icon.png'
 import {
-  ContainerItem,
   ContainerImage,
   ContainerButtons,
   ContainerText,
-  DetailsButton,
-  Value,
-  Title,
   Image
 } from './client-item-styles'
 import {
@@ -20,7 +13,6 @@ import {
   ContainerItemDetails,
   CloseModal,
   HtmlLabel,
-  CustomButton,
   HtmlInput,
   ContainerInputChild,
   CancelEditButton
@@ -199,7 +191,7 @@ class ClientNew extends Component {
                     <ContainerInputChild>
                       {Object.keys(this.state.client.address).map(key => {
                         return (
-                          key == 'geo' ?
+                          key === 'geo' ?
                             Object.keys(this.state.client.address[key]).map(keyOfKey => {
                               return (
                                 <ContainerInput key={keyOfKey}>
@@ -227,7 +219,7 @@ class ClientNew extends Component {
               <CancelEditButton
                 show={true}
                 onClick={() => {
-                  this.props.save(this.state.client),
+                  this.props.save(this.state.client)
                   this.props.cancelNewClient()
                 }}
                 mode='nice'>

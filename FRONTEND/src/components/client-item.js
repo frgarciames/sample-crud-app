@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import imageProfile from '../assets/profile.png'
-import imageDelete from '../assets/delete-icon.png';
-import imageEdit from '../assets/edit-icon.png'
 import { 
   ContainerItem, 
   ContainerImage, 
-  ContainerButtons, 
   ContainerText, 
   DetailsButton, 
-  CustomButton, 
   Value, 
   Title, 
   Image } from './client-item-styles'
